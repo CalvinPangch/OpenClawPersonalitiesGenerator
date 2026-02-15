@@ -1,0 +1,40 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#16263B"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="190" y1="190" x2="1010" y2="500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00D4FF"/>
+      <stop offset="1" stop-color="#3DF6A3"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="70" y="70" width="1060" height="490" rx="24" fill="#0F1B2E" stroke="#233754" stroke-width="2"/>
+  <circle cx="120" cy="120" r="7" fill="#3DF6A3"/>
+  <circle cx="145" cy="120" r="7" fill="#00D4FF"/>
+  <circle cx="170" cy="120" r="7" fill="#8AA6C5"/>
+  <rect x="120" y="180" width="960" height="70" rx="12" fill="#13243A"/>
+  <rect x="120" y="276" width="460" height="220" rx="16" fill="#13243A"/>
+  <rect x="600" y="276" width="480" height="220" rx="16" fill="#13243A"/>
+  <text x="120" y="360" fill="#C5D7EB" font-family="'IBM Plex Sans', Arial, sans-serif" font-size="32" font-weight="600">
+    Generate all core OpenClaw files
+  </text>
+  <text x="120" y="416" fill="#8AA6C5" font-family="'IBM Plex Sans', Arial, sans-serif" font-size="24">
+    IDENTITY.md · SOUL.md · USER.md
+  </text>
+  <text x="120" y="454" fill="#8AA6C5" font-family="'IBM Plex Sans', Arial, sans-serif" font-size="24">
+    AGENTS.md · TOOLS.md · HEARTBEAT.md
+  </text>
+  <text x="120" y="234" fill="#E5F0FF" font-family="'IBM Plex Sans', Arial, sans-serif" font-size="44" font-weight="700">
+    OpenClaw Personality Generator
+  </text>
+  <rect x="640" y="330" width="400" height="66" rx="33" fill="url(#accent)"/>
+  <text x="716" y="372" fill="#03202A" font-family="'IBM Plex Sans', Arial, sans-serif" font-size="30" font-weight="700">
+    Build Once
+  </text>
+  <rect x="640" y="415" width="400" height="66" rx="33" fill="#1C314D" stroke="#2A4A6E"/>
+  <text x="710" y="457" fill="#D5E6FA" font-family="'IBM Plex Sans', Arial, sans-serif" font-size="30" font-weight="700">
+    Export Fast
+  </text>
+</svg>
