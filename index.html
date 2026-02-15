@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenClaw Personality Generator</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <p class="header-kicker">⟩ openclaw.ai inspired workflow</p>
+    <h1 class="header-title"><span class="header-title-accent">OpenClaw</span> Personality Generator</h1>
+    <p class="header-subtitle">The configuration builder that actually does things. Define your assistant once, export every core markdown file, and ship.</p>
+    <div class="header-actions">
+      <button type="button" id="btn-tutorial" class="btn btn-info">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Tutorial
+      </button>
+      <button type="button" id="btn-example" class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Load Example
+      </button>
+      <button type="button" id="btn-reset" class="btn btn-danger">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        Reset All
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Panel -->
+  <main class="panel">
+    <!-- Tab Navigation -->
+    <nav class="tabs" role="tablist" aria-label="Configuration sections">
+      <button type="button" class="tab active" role="tab" aria-selected="true" aria-controls="tab-identity" id="tab-btn-identity" data-tab="identity">
+        <span class="tab-emoji">ID</span><span class="tab-label">Identity</span>
+      </button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="tab-soul" id="tab-btn-soul" data-tab="soul">
+        <span class="tab-emoji">SL</span><span class="tab-label">Soul</span>
+      </button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="tab-user" id="tab-btn-user" data-tab="user">
+        <span class="tab-emoji">US</span><span class="tab-label">User</span>
+      </button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="tab-agents" id="tab-btn-agents" data-tab="agents">
+        <span class="tab-emoji">AG</span><span class="tab-label">Agents</span>
+      </button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="tab-tools" id="tab-btn-tools" data-tab="tools">
+        <span class="tab-emoji">TL</span><span class="tab-label">Tools</span>
+      </button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="tab-heartbeat" id="tab-btn-heartbeat" data-tab="heartbeat">
+        <span class="tab-emoji">HB</span><span class="tab-label">Heartbeat</span>
+      </button>
+    </nav>
+
+    <!-- Tab Panels -->
+    <div class="tab-panels">
+
+      <!-- ===== IDENTITY TAB ===== -->
+      <section class="tab-panel active" id="tab-identity" role="tabpanel" aria-labelledby="tab-btn-identity">
+        <h2 class="section-title">IDENTITY.md &mdash; Identity Settings</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="identity-name">Assistant Name</label>
+            <input type="text" id="identity-name" placeholder="e.g. Lobster, Nova, Atlas" />
+          </div>
+          <div class="form-group">
+            <label for="identity-role">Role</label>
+            <input type="text" id="identity-role" placeholder="e.g. Personal assistant, mentor" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Quick-Select Role</label>
+          <div class="preset-grid" id="role-presets"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="identity-vibe">Communication Vibe</label>
+          <input type="text" id="identity-vibe" placeholder="e.g. Pragmatic with a dash of humor" />
+        </div>
+
+        <div class="form-group">
+          <label>Quick-Select Vibe</label>
+          <div class="preset-grid" id="vibe-presets"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="identity-greeting">Greeting Message <span class="label-hint">(optional)</span></label>
+          <input type="text" id="identity-greeting" placeholder="e.g. Hey! What are you working on today?" />
+        </div>
+
+        <div class="form-group">
+          <label for="identity-response-length">Response Length Preference</label>
+          <select id="identity-response-length">
+            <option value="">Not specified</option>
+            <option value="concise">Concise &mdash; short and to the point</option>
+            <option value="balanced">Balanced &mdash; adapts to the question</option>
+            <option value="thorough">Thorough &mdash; detailed explanations</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Signature Emoji</label>
+          <div class="emoji-picker" id="emoji-picker"></div>
+          <input type="text" id="identity-emoji-custom" class="emoji-custom-input" placeholder="Or type a custom emoji" maxlength="4" />
+        </div>
+      </section>
+
+      <!-- ===== SOUL TAB ===== -->
+      <section class="tab-panel" id="tab-soul" role="tabpanel" aria-labelledby="tab-btn-soul">
+        <h2 class="section-title">SOUL.md &mdash; Soul Settings</h2>
+
+        <div class="form-group">
+          <label>Core Behavioral Principles</label>
+          <div class="checkbox-group" id="soul-principles">
+            <label class="checkbox-label">
+              <input type="checkbox" id="soul-p1" checked />
+              <span>Be genuinely helpful, not performatively helpful &mdash; skip "Great question!" and just help</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="soul-p2" checked />
+              <span>Have opinions and personality &mdash; disagree, have preferences, find things interesting or boring</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="soul-p3" checked />
+              <span>Be resourceful before asking &mdash; read files, check docs, get stuck before you ask</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="soul-p4" checked />
+              <span>Earn trust through competence &mdash; be cautious with external actions, bold with internal ones</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="soul-p5" checked />
+              <span>Respect privacy &mdash; you have access to the user's life, treat that trust with care</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Tone Sliders</label>
+          <div class="slider-group">
+            <div class="slider-row">
+              <label for="soul-formality" class="slider-label">Formality</label>
+              <span class="slider-hint slider-hint-left">Casual</span>
+              <input type="range" id="soul-formality" min="1" max="3" value="2" />
+              <span class="slider-hint slider-hint-right">Formal</span>
+            </div>
+            <div class="slider-row">
+              <label for="soul-humor" class="slider-label">Humor</label>
+              <span class="slider-hint slider-hint-left">Dry</span>
+              <input type="range" id="soul-humor" min="1" max="3" value="2" />
+              <span class="slider-hint slider-hint-right">Playful</span>
+            </div>
+            <div class="slider-row">
+              <label for="soul-empathy" class="slider-label">Empathy</label>
+              <span class="slider-hint slider-hint-left">Analytical</span>
+              <input type="range" id="soul-empathy" min="1" max="3" value="2" />
+              <span class="slider-hint slider-hint-right">Empathetic</span>
+            </div>
+            <div class="slider-row">
+              <label for="soul-creativity" class="slider-label">Creativity</label>
+              <span class="slider-hint slider-hint-left">By-the-book</span>
+              <input type="range" id="soul-creativity" min="1" max="3" value="2" />
+              <span class="slider-hint slider-hint-right">Experimental</span>
+            </div>
+            <div class="slider-row">
+              <label for="soul-directness" class="slider-label">Directness</label>
+              <span class="slider-hint slider-hint-left">Diplomatic</span>
+              <input type="range" id="soul-directness" min="1" max="3" value="2" />
+              <span class="slider-hint slider-hint-right">Blunt</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="soul-emoji-policy">Emoji Usage</label>
+            <select id="soul-emoji-policy">
+              <option value="off">Off &mdash; no emojis in responses</option>
+              <option value="minimal" selected>Minimal &mdash; occasional, tasteful</option>
+              <option value="expressive">Expressive &mdash; frequent and lively</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="soul-error-handling">Error Handling Style</label>
+            <select id="soul-error-handling">
+              <option value="brief" selected>Brief &mdash; correct and move on</option>
+              <option value="detailed">Detailed &mdash; explain what went wrong</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="soul-custom">Custom Rules <span class="label-hint">(one per line)</span></label>
+          <textarea id="soul-custom" rows="3" placeholder="Add any custom behavioral rules..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="soul-style">Communication Style Description</label>
+          <textarea id="soul-style" rows="3" placeholder="Describe the overall communication style...">Be the kind of assistant people genuinely enjoy talking to. Be concise when brevity works, detailed when depth is needed. Not a corporate bot, not a sycophant, just... useful.</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Boundary Rules</label>
+          <div class="checkbox-group" id="soul-boundaries">
+            <label class="checkbox-label">
+              <input type="checkbox" id="soul-b1" checked />
+              <span>Keep private things private, always</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="soul-b2" checked />
+              <span>When unsure, ask before acting (for external actions)</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="soul-b3" checked />
+              <span>Don't send half-baked replies on messaging platforms</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="soul-b4" checked />
+              <span>You're not the user's spokesperson &mdash; be careful in group chats</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== USER TAB ===== -->
+      <section class="tab-panel" id="tab-user" role="tabpanel" aria-labelledby="tab-btn-user">
+        <h2 class="section-title">USER.md &mdash; User Information</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="user-name">Your Name</label>
+            <input type="text" id="user-name" placeholder="e.g. Alex" />
+          </div>
+          <div class="form-group">
+            <label for="user-callname">Preferred Callname</label>
+            <input type="text" id="user-callname" placeholder="e.g. Al, Boss" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="user-pronouns">Pronouns</label>
+            <select id="user-pronouns">
+              <option value="">Not specified</option>
+              <option value="he/him">he/him</option>
+              <option value="she/her">she/her</option>
+              <option value="they/them">they/them</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="user-timezone">Timezone</label>
+            <select id="user-timezone">
+              <option value="">Select timezone</option>
+              <option value="UTC">UTC (GMT+0)</option>
+              <option value="America/New_York">US East &mdash; America/New_York (GMT-5)</option>
+              <option value="America/Chicago">US Central &mdash; America/Chicago (GMT-6)</option>
+              <option value="America/Denver">US Mountain &mdash; America/Denver (GMT-7)</option>
+              <option value="America/Los_Angeles">US West &mdash; America/Los_Angeles (GMT-8)</option>
+              <option value="America/Phoenix">US Arizona &mdash; America/Phoenix (GMT-7)</option>
+              <option value="America/Toronto">Toronto &mdash; America/Toronto (GMT-5)</option>
+              <option value="Europe/London">London &mdash; Europe/London (GMT+0)</option>
+              <option value="Europe/Berlin">Berlin &mdash; Europe/Berlin (GMT+1)</option>
+              <option value="Europe/Paris">Paris &mdash; Europe/Paris (GMT+1)</option>
+              <option value="Europe/Amsterdam">Amsterdam &mdash; Europe/Amsterdam (GMT+1)</option>
+              <option value="Europe/Warsaw">Warsaw &mdash; Europe/Warsaw (GMT+1)</option>
+              <option value="Europe/Istanbul">Istanbul &mdash; Europe/Istanbul (GMT+3)</option>
+              <option value="Asia/Dubai">Dubai &mdash; Asia/Dubai (GMT+4)</option>
+              <option value="Asia/Kolkata">India &mdash; Asia/Kolkata (GMT+5:30)</option>
+              <option value="Asia/Bangkok">Bangkok &mdash; Asia/Bangkok (GMT+7)</option>
+              <option value="Asia/Tokyo">Tokyo &mdash; Asia/Tokyo (GMT+9)</option>
+              <option value="Asia/Seoul">Seoul &mdash; Asia/Seoul (GMT+9)</option>
+              <option value="Asia/Shanghai">Shanghai &mdash; Asia/Shanghai (GMT+8)</option>
+              <option value="Asia/Hong_Kong">Hong Kong &mdash; Asia/Hong_Kong (GMT+8)</option>
+              <option value="Asia/Singapore">Singapore &mdash; Asia/Singapore (GMT+8)</option>
+              <option value="Australia/Sydney">Sydney &mdash; Australia/Sydney (GMT+11)</option>
+              <option value="Pacific/Auckland">Auckland &mdash; Pacific/Auckland (GMT+13)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="user-language">Language Preference</label>
+            <select id="user-language">
+              <option value="English preferred">English preferred</option>
+              <option value="Bilingual (English + local)">Bilingual (English + local language)</option>
+              <option value="Chinese preferred (mix OK)">Chinese preferred (mix OK)</option>
+              <option value="Japanese preferred">Japanese preferred</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="user-tech-level">Tech Proficiency</label>
+            <select id="user-tech-level">
+              <option value="">Not specified</option>
+              <option value="beginner">Beginner &mdash; explain everything simply</option>
+              <option value="intermediate">Intermediate &mdash; some technical is OK</option>
+              <option value="advanced">Advanced &mdash; skip the basics</option>
+              <option value="expert">Expert &mdash; give me the raw details</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="user-work-schedule">Work Schedule <span class="label-hint">(optional)</span></label>
+            <input type="text" id="user-work-schedule" placeholder="e.g. Mon-Fri 9am-6pm" />
+          </div>
+          <div class="form-group">
+            <label for="user-response-format">Response Format Preference</label>
+            <select id="user-response-format">
+              <option value="">Not specified</option>
+              <option value="markdown">Markdown &mdash; headers, lists, code blocks</option>
+              <option value="plain">Plain text &mdash; simple and clean</option>
+              <option value="code-first">Code-first &mdash; show me the code, then explain</option>
+              <option value="bullets">Bullet points &mdash; concise lists</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="user-current-projects">Current Projects <span class="label-hint">(optional)</span></label>
+          <textarea id="user-current-projects" rows="2" placeholder="What are you actively working on? This helps your AI provide relevant context."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="user-background">Personal Background Notes <span class="label-hint">(optional)</span></label>
+          <textarea id="user-background" rows="3" placeholder="Anything you want your AI to know about you: hobbies, job, preferences..."></textarea>
+        </div>
+      </section>
+
+      <!-- ===== AGENTS TAB ===== -->
+      <section class="tab-panel" id="tab-agents" role="tabpanel" aria-labelledby="tab-btn-agents">
+        <h2 class="section-title">AGENTS.md &mdash; Agent Rules</h2>
+
+        <div class="form-group">
+          <label>Proactivity Level</label>
+          <div class="preset-grid" id="proactivity-presets"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Memory System</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-mem1" checked />
+              <span>Enable daily memory notes (memory/YYYY-MM-DD.md)</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-mem2" checked />
+              <span>Enable long-term memory (MEMORY.md) &mdash; curated knowledge base</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-mem3" />
+              <span>Periodic memory maintenance &mdash; review daily notes and update long-term memory</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="agents-mem-consolidation">Memory Consolidation Frequency</label>
+          <select id="agents-mem-consolidation">
+            <option value="">Not specified</option>
+            <option value="daily">Daily &mdash; review notes every day</option>
+            <option value="weekly">Weekly &mdash; weekly review and consolidation</option>
+            <option value="manual">Manual &mdash; only when I ask</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Safety Principles</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-safe1" checked />
+              <span>Never exfiltrate private data</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-safe2" checked />
+              <span>Don't run destructive commands without explicit confirmation</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-safe3" checked />
+              <span>Prefer "trash" over "rm" &mdash; recoverable over permanent deletion</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Confirmation Requirements</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-confirm-file" checked />
+              <span>Confirm before file write/delete operations</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-confirm-api" />
+              <span>Confirm before making external API calls or sending messages</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Group Chat Rules</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-group1" checked />
+              <span>Only respond when mentioned or when you can add value</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-group2" checked />
+              <span>Quality over quantity &mdash; don't interrupt conversations</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-group3" />
+              <span>Support emoji reactions (thumbs up, heart, etc. for lightweight responses)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Advanced Features</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-adv1" />
+              <span>Voice storytelling mode &mdash; use TTS for stories, movie summaries</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="agents-adv2" />
+              <span>Platform-specific formatting &mdash; auto-adapt for Discord/WhatsApp</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="agents-daily-routine">Daily Routine <span class="label-hint">(optional, one task per line)</span></label>
+          <textarea id="agents-daily-routine" rows="3" placeholder="e.g.&#10;9am: Check inbox and summarize important emails&#10;12pm: Review morning notes&#10;6pm: Daily summary and plan for tomorrow"></textarea>
+        </div>
+      </section>
+
+      <!-- ===== TOOLS TAB ===== -->
+      <section class="tab-panel" id="tab-tools" role="tabpanel" aria-labelledby="tab-btn-tools">
+        <h2 class="section-title">TOOLS.md &mdash; Tool Settings</h2>
+
+        <div class="form-group">
+          <label>Tool Profile</label>
+          <div class="preset-grid" id="tool-profile-presets"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Connected Platforms</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="tools-platform-github" />
+              <span>GitHub &mdash; repositories, issues, PRs</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="tools-platform-jira" />
+              <span>Jira &mdash; project tracking, tickets</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="tools-platform-notion" />
+              <span>Notion &mdash; docs, databases, wikis</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="tools-platform-obsidian" />
+              <span>Obsidian &mdash; notes, knowledge graph</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="tools-platform-google" />
+              <span>Google Workspace &mdash; Gmail, Calendar, Drive</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="tools-platform-slack" />
+              <span>Slack &mdash; channels, messages, threads</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tools-model-pref">Model Preference</label>
+            <select id="tools-model-pref">
+              <option value="">Not specified</option>
+              <option value="fast">Fast &mdash; prioritize speed and cost</option>
+              <option value="balanced">Balanced &mdash; good quality, reasonable speed</option>
+              <option value="best">Best quality &mdash; use the most capable model</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tools-output-format">Output Format Default</label>
+            <select id="tools-output-format">
+              <option value="">Not specified</option>
+              <option value="markdown">Markdown</option>
+              <option value="json">JSON</option>
+              <option value="plain">Plain text</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>TTS Voice Preference</label>
+          <div class="preset-grid" id="tts-presets"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="tools-env">Custom Environment Notes <span class="label-hint">(device names, SSH hosts, aliases, etc.)</span></label>
+          <textarea id="tools-env" rows="4" placeholder="Example:&#10;- MacBook Pro &rarr; &quot;main-dev&quot;&#10;- SSH: dev-server @ 192.168.1.100&#10;- Alias: ll = ls -la"></textarea>
+        </div>
+      </section>
+
+      <!-- ===== HEARTBEAT TAB ===== -->
+      <section class="tab-panel" id="tab-heartbeat" role="tabpanel" aria-labelledby="tab-btn-heartbeat">
+        <h2 class="section-title">HEARTBEAT.md &mdash; Heartbeat Schedule</h2>
+
+        <div class="form-group">
+          <label>Heartbeat Mode</label>
+          <div class="preset-grid" id="heartbeat-presets"></div>
+        </div>
+
+        <div class="form-group" id="heartbeat-schedule-group">
+          <label>Schedule</label>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="hb-interval" class="sub-label">Check Interval</label>
+              <select id="hb-interval">
+                <option value="">Not specified</option>
+                <option value="10m">Every 10 minutes</option>
+                <option value="15m">Every 15 minutes</option>
+                <option value="30m">Every 30 minutes</option>
+                <option value="1h">Every hour</option>
+                <option value="2h">Every 2 hours</option>
+                <option value="4h">Every 4 hours</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="hb-digest" class="sub-label">Summary Digest</label>
+              <select id="hb-digest">
+                <option value="off">Off</option>
+                <option value="daily">Daily summary</option>
+                <option value="weekly">Weekly summary</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="hb-active-start" class="sub-label">Active Hours Start</label>
+              <input type="time" id="hb-active-start" value="08:00" />
+            </div>
+            <div class="form-group">
+              <label for="hb-active-end" class="sub-label">Active Hours End</label>
+              <input type="time" id="hb-active-end" value="22:00" />
+            </div>
+          </div>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="hb-quiet-hours" />
+              <span>Enable Quiet Hours / Do Not Disturb &mdash; suppress non-urgent notifications outside active hours</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group" id="heartbeat-checks-group">
+          <label>Periodic Check Items</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="hb-check1" />
+              <span>Check Email &mdash; any important unread messages?</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="hb-check2" />
+              <span>Check Calendar &mdash; what's coming up in the next 24-48 hours?</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="hb-check3" />
+              <span>Check Weather &mdash; do I need an umbrella today?</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="hb-check4" />
+              <span>Check Social Notifications &mdash; any mentions on Twitter/social?</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="hb-check5" />
+              <span>Check Project Status &mdash; git status, CI/CD pipelines</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="hb-check6" />
+              <span>Check System Health &mdash; disk space, CPU, memory, server uptime</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="hb-check7" />
+              <span>Check News / RSS Feeds &mdash; scan relevant feeds for updates</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="hb-check8" />
+              <span>Habit Tracking &mdash; water, breaks, exercise reminders</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group" id="heartbeat-custom-group">
+          <label for="hb-custom">Custom Check Tasks <span class="label-hint">(one per line, optional)</span></label>
+          <textarea id="hb-custom" rows="3" placeholder="e.g. Check stock portfolio&#10;Review RSS feed highlights"></textarea>
+        </div>
+      </section>
+
+    </div><!-- end tab-panels -->
+
+    <!-- Generate Button -->
+    <div class="generate-section">
+      <button type="button" id="btn-generate" class="btn btn-generate">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Generate All Files
+      </button>
+    </div>
+
+    <!-- Persona Card (hidden until generation) -->
+    <div class="persona-card" id="persona-card" hidden>
+      <div class="persona-emoji" id="persona-emoji"></div>
+      <h3 class="persona-name" id="persona-name"></h3>
+      <p class="persona-role" id="persona-role"></p>
+      <span class="persona-badge" id="persona-badge"></span>
+
+      <div class="persona-stats" id="persona-stats"></div>
+
+      <div class="persona-traits" id="persona-traits"></div>
+
+      <div class="persona-files" id="persona-files"></div>
+
+      <p class="persona-attribution" id="persona-attribution"></p>
+
+      <button type="button" id="btn-download-all" class="btn btn-download-all">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download All Files
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Tutorial Modal -->
+  <div class="modal-overlay" id="tutorial-overlay" hidden>
+    <div class="modal" id="tutorial-modal" role="dialog" aria-labelledby="tutorial-title" aria-modal="true">
+      <button type="button" class="modal-close" id="tutorial-close" aria-label="Close tutorial">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal-body" id="tutorial-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <footer class="footer">
+    <p>OpenClaw Personality Generator &mdash; Community-driven and open source.</p>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
