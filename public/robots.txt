@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://calvinpangch.github.io/OpenClawPersonalitiesGenerator/sitemap.xml
