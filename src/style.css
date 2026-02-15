@@ -1104,6 +1104,34 @@ input[type="time"]:focus {
   padding-bottom: 28px;
 }
 
+.footer-copy {
+  margin-bottom: 6px;
+}
+
+.footer-links {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.footer a {
+  color: #fdba74;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.footer a:hover {
+  color: #fff;
+  border-bottom-color: rgba(253, 186, 116, 0.9);
+}
+
+.footer-separator {
+  color: rgba(148, 163, 184, 0.8);
+}
+
 /* ========================================
    Responsive — 600px breakpoint
    ======================================== */
